@@ -11,7 +11,20 @@ Beginner-friendly Streamlit application using:
 Place one or more authorized OEM PDFs in ./data/.
 The PDF filename should contain the supported engine model name.
 """
+import os
+import streamlit as st
 
+
+def get_groq_api_key() -> str:
+    """Read the Groq API key from Streamlit Secrets or environment variables."""
+    try:
+        key = st.secrets.get("GROQ_API_KEY", "")
+        if key:
+            return key
+    except Exception:
+        pass
+
+    return os.getenv("GROQ_API_KEY", "")
 from __future__ import annotations
 
 import re
@@ -398,12 +411,7 @@ def render_sidebar() -> Tuple[str, str, str]:
             help="The selected model controls which local manual index is searched.",
         )
 
-       def get_groq_api_key() -> str:
-    """Get the Groq API key securely from Streamlit Secrets."""
-    try:
-        return st.secrets["GROQ_API_KEY"]
-    except KeyError:
-        return ""
+  groq_api_key = get_groq_api_key()
         )
 
         model_name = st.text_input(
