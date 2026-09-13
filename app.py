@@ -398,10 +398,12 @@ def render_sidebar() -> Tuple[str, str, str]:
             help="The selected model controls which local manual index is searched.",
         )
 
-        api_key = st.text_input(
-            "Groq API key",
-            type="password",
-            help="Your key is used only for the current Streamlit session.",
+       def get_groq_api_key() -> str:
+    """Get the Groq API key securely from Streamlit Secrets."""
+    try:
+        return st.secrets["GROQ_API_KEY"]
+    except KeyError:
+        return ""
         )
 
         model_name = st.text_input(
